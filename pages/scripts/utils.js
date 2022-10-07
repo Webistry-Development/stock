@@ -114,7 +114,7 @@ export function turnH6intoDetailM(scope = document) {
 
 export function makeRelative(href) {
   const projectName = 'stock--adobecom';
-  const productionDomains = ['stock.adobe.com'];  
+  const productionDomains = ['stock.adobe.com'];
   const fixedHref = href.replace(/\u2013|\u2014/g, '--');
   const hosts = [`${projectName}.hlx.page`, `${projectName}.hlx.live`, ...productionDomains];
   const url = new URL(fixedHref);
@@ -303,4 +303,18 @@ export async function handleAnchors() {
       toggleSection.classList.add('anchor-section-toggle--hidden');
     }
   });
+}
+
+export function getIcon(icons, alt) {
+  // eslint-disable-next-line no-param-reassign
+  icons = Array.isArray(icons) ? icons : [icons];
+  const [defaultIcon, mobileIcon] = icons;
+  const icon = (mobileIcon && window.innerWidth < 600) ? mobileIcon : defaultIcon;
+  return (`<img class="icon icon-${icon}" src="/pages/img/icons/${icon}.svg" alt="${alt || icon}">`);
+}
+
+export function getIconElement(icons, size, alt) {
+  const $div = createTag('div');
+  $div.innerHTML = getIcon(icons, alt, size);
+  return ($div.firstChild);
 }

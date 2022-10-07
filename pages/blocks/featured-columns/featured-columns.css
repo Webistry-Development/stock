@@ -198,6 +198,24 @@ main .dark-theme .featured-columns p {
   }
 }
 
+main .featured-columns .social-links {
+  display: flex;
+  gap: 8px;
+}
+
+main .featured-columns .social-link-wrapper {
+  transition: opacity 0.2s;
+}
+
+main .featured-columns .social-link-wrapper:hover {
+  opacity: 0.7;
+}
+
+main .featured-columns .social-link-wrapper .icon {
+  height: 22px;
+  width: 22px;
+}
+
 main .page-feed + .featured-columns {
   margin-top: var(--block-spacing-l);
   margin-bottom: var(--block-spacing-l);

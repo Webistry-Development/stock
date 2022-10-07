@@ -1,7 +1,53 @@
 import {
   transformLinkToAnimation,
-  createTag,
+  createTag, getIconElement,
 } from '../../scripts/utils.js';
+
+function decorateSocialIcons(block) {
+  block.querySelectorAll(':scope a').forEach(($a) => {
+    if ($a.href === $a.textContent) {
+      let icon = '';
+      if ($a.href.startsWith('https://www.instagram.com')) {
+        icon = 'instagram';
+      }
+      if ($a.href.startsWith('https://twitter.com')) {
+        icon = 'twitter';
+      }
+      if ($a.href.startsWith('https://www.pinterest.')) {
+        icon = 'pinterest';
+      }
+      if ($a.href.startsWith('https://www.facebook.')) {
+        icon = 'facebook';
+      }
+      if ($a.href.startsWith('https://www.linkedin.com')) {
+        icon = 'linkedin';
+      }
+      if ($a.href.startsWith('https://www.youtube.com')) {
+        icon = 'youtube';
+      }
+      if ($a.href.startsWith('https://www.tiktok.com')) {
+        icon = 'tiktok';
+      }
+      const $parent = $a.parentElement;
+      if (!icon && $parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
+        icon = 'globe';
+      }
+
+      if (icon) {
+        $a.innerHTML = '';
+        const $icon = getIconElement(icon, 44);
+        $a.appendChild($icon);
+        $a.className = 'social-link-wrapper';
+        if ($parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
+          $parent.previousElementSibling.appendChild($a);
+          $parent.remove();
+        } else {
+          $parent.classList.add('social-links');
+        }
+      }
+    }
+  });
+}
 
 function lazyDecorateVideo(cell, a) {
   if (!a || (!a.href.endsWith('.mp4'))) return;
@@ -61,7 +107,7 @@ export default function featuredColumns(block) {
       const a = cell.querySelector('a');
       if (a && cell.childNodes.length === 1 && (a.href.endsWith('.mp4'))) {
         lazyDecorateVideo(cell, a);
-      } else if (cell.querySelector(':scope > .milo-video:first-child:last-child') 
+      } else if (cell.querySelector(':scope > .milo-video:first-child:last-child')
               || cell.querySelector(':scope > p.button-container:first-child:last-child > .milo-video')
               || cell.querySelector(':scope > p.button-container:first-child:last-child > a[href*="youtu.be"]')
               || cell.querySelector(':scope > p.button-container:first-child:last-child > a[href*="youtube.com"]')) {
@@ -89,4 +135,5 @@ export default function featuredColumns(block) {
       }
     });
   });
+  decorateSocialIcons(block);
 }
