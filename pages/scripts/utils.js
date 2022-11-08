@@ -304,3 +304,14 @@ export async function handleAnchors() {
     }
   });
 }
+
+export async function shareBlockPlaceholder() {
+  // Temporary patch until milo placeholders are released
+  const placeholders = await fetchPlaceholders((placeholders) => placeholders);
+  if (placeholders['share-block-text']) {
+    const shareBlockTexts = document.querySelectorAll('main > .section > .share > p:first-child');
+    shareBlockTexts.forEach((shareBlockText) => {
+      shareBlockText.textContent = placeholders['share-block-text'];
+    });
+  }
+}
