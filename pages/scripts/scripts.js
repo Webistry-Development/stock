@@ -30,8 +30,9 @@ const CONFIG = {
   codeRoot: '/pages',
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
-    de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
-    cn: { ietf: 'zh-CN', tk: 'puu3xkp' },
+    es: { ietf: 'es_ES' },
+    jp: { ietf: 'ja_JP' },
+    br: { ietf: 'pt_BR' },
   },
 };
 
