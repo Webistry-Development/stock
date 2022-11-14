@@ -9,8 +9,10 @@ indices:
       - '/pages/artisthub/**/**'
       - '/pages/artisthub/**/**/**'
     exclude:
-      - '/drafts/**''
-      - '/docs/**''
+      - '/drafts/**'
+      - '/docs/**'
+      - '/fragments/**'
+      - '/pdf/**',
     target: /pages/artisthub/query-index
     properties:
       authors:
