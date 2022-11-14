@@ -1,0 +1,7 @@
+version: 1
+
+sitemaps:
+  artisthub:
+    origin: https://stock.adobe.com/pages/artisthub
+    source: /query-index.json
+    destination: /sitemap.xml
