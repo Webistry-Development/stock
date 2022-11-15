@@ -1,8 +1,9 @@
 version: 1
 
 sitemaps:
-  artisthub:
+  website:
     origin: https://stock.adobe.com
+    lastmod: YYYY-MM-DD
     languages:
       default:
         source: /pages/artisthub/query-index.json
