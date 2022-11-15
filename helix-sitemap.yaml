@@ -6,6 +6,6 @@ sitemaps:
     languages:
       default:
         source: /pages/artisthub/query-index.json
-        destination: /pages/artisthub/sitemap.xml
+        destination: /pages/artisthub/sitemap-us.xml
         hreflang: en
         alternate: /{path}
