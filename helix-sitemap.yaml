@@ -3,5 +3,9 @@ version: 1
 sitemaps:
   artisthub:
     origin: https://stock.adobe.com/pages/artisthub
-    source: /pages/artisthub/query-index.json
-    destination: /pages/artisthub/sitemap.xml
+    languages:
+      default:
+        source: /pages/artisthub/query-index.json
+        destination: /pages/artisthub/sitemap.xml
+        hreflang: en
+        alternate: /{path}
