@@ -2,7 +2,7 @@ version: 1
 
 sitemaps:
   artisthub:
-    origin: https://stock.adobe.com/pages/artisthub
+    origin: https://stock.adobe.com
     languages:
       default:
         source: /pages/artisthub/query-index.json
