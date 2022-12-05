@@ -16,10 +16,8 @@ function lazyDecorateVideo(cell, a) {
       const row = cell.closest('.featured-row');
       const cta = row.querySelector('.button.accent') ?? row.querySelector('.button');
       if (cta) {
-        const a = createTag('a', {
-          href: cta.href, title: cta.title, target: cta.target, rel: cta.rel,
-        });
-        cell.appendChild(a);
+        const $link = createTag('a', { href: cta.href, title: cta.title, target: cta.target, rel: cta.rel });
+        cell.appendChild($link);
         a.appendChild(mp4);
       } else {
         cell.appendChild(mp4);
@@ -61,7 +59,7 @@ export default function featuredColumns(block) {
       const a = cell.querySelector('a');
       if (a && cell.childNodes.length === 1 && (a.href.endsWith('.mp4'))) {
         lazyDecorateVideo(cell, a);
-      } else if (cell.querySelector(':scope > .milo-video:first-child:last-child') 
+      } else if (cell.querySelector(':scope > .milo-video:first-child:last-child')
               || cell.querySelector(':scope > p.button-container:first-child:last-child > .milo-video')
               || cell.querySelector(':scope > p.button-container:first-child:last-child > a[href*="youtu.be"]')
               || cell.querySelector(':scope > p.button-container:first-child:last-child > a[href*="youtube.com"]')) {
