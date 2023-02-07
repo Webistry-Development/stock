@@ -1,14 +1,3 @@
-/*
- * Copyright 2020 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
 let sitemapURLs = [];
 let totalSize = 0;
 let totalFiles = 0;
@@ -90,7 +79,7 @@ async function fgrep(pathname, pattern) {
 
 async function edit(path, y) {
   try {
-    const statusRes = await fetch(`https://admin.hlx.page/status/adobe/express-website/main${path}?editUrl=auto`);
+    const statusRes = await fetch(`https://admin.hlx.page/status/adobecom/stock/main${path}?editUrl=auto`);
     const status = await statusRes.json();
     const editUrl = status.edit && status.edit.url;
     if (y) {
@@ -174,7 +163,7 @@ export async function run() {
   endTime = new Date();
   document.getElementById('results').textContent = '';
 
-  await loadSitemap('/express/sitemap.xml');
+  await loadSitemap('/pages/artisthub/sitemap-us.xml');
   const resultDisplay = document.body;
   const sitemap = sitemapURLs;
   let pattern = document.getElementById('input').value;
