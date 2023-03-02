@@ -15,6 +15,7 @@ import {
   loadBlockCSS,
   createTag,
   makeRelative,
+  decorateBlockAnalytics,
 } from '../../scripts/utils.js';
 
 function handlize(string) {
@@ -348,6 +349,7 @@ async function buildPayload(block, payload) {
 }
 
 export default async function decorate(block) {
+  decorateBlockAnalytics(block);
   const results = await fetchPlaceholders((placeholders) => placeholders);
 
   const payload = {

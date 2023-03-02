@@ -1,6 +1,7 @@
-import { transformLinkToAnimation } from '../../scripts/utils.js';
+import { transformLinkToAnimation, decorateBlockAnalytics } from '../../scripts/utils.js';
 
 export default function banner(block) {
+  decorateBlockAnalytics(block);
   const pics = block.querySelectorAll('picture');
   pics.forEach((pic) => {
     if (pic.parentElement.tagName === 'P') {

@@ -4,6 +4,7 @@ import {
   makeRelative,
   turnH6intoDetailM,
   fetchPlaceholders,
+  decorateBlockAnalytics,
 } from '../../scripts/utils.js';
 
 const placeholders = await fetchPlaceholders((result) => result);
@@ -213,6 +214,7 @@ function decorateCards(block, cards, payload) {
 }
 
 export default async function pageFeed(block) {
+  decorateBlockAnalytics(block);
   const payload = {
     offset: 0,
     limit: 8,

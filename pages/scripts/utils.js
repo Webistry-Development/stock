@@ -30,8 +30,9 @@ const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
 /*
 * ------------------------------------------------------------
-
 */
+
+export const { decorateBlockAnalytics } = await import(`${miloLibs}/martech/attributes.js`);
 
 export function toClassName(name) {
   return (name && typeof name === 'string') ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-') : '';
