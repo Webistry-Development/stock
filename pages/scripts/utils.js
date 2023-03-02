@@ -34,6 +34,8 @@ const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
 export const { decorateBlockAnalytics } = await import(`${miloLibs}/martech/attributes.js`);
 
+export const { decorateLinkAnalytics } = await import(`${miloLibs}/martech/attributes.js`);
+
 export function toClassName(name) {
   return (name && typeof name === 'string') ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-') : '';
 }
@@ -181,6 +183,8 @@ export function decorateButtons(scope = document) {
         }
       }
     }
+    const container = a.closest('div');
+    decorateLinkAnalytics(container, container.querySelectorAll('h1, h2, h3, h4, h5, h6'));
   });
 }
 
