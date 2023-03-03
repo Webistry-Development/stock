@@ -73,7 +73,7 @@ export function transformLinkToAnimation(a) {
 
 export function turnH6intoDetailM(scope = document) {
   scope.querySelectorAll('h6').forEach((h6) => {
-    const p = createTag('p', { class: 'detail-M' }, h6.innerHTML);
+    const p = createTag('p', { class: 'detail-m' }, h6.innerHTML);
     const attrs = h6.attributes;
     for (let i = 0, len = attrs.length; i < len; i += 1) {
       p.setAttribute(attrs[i].name, attrs[i].value);

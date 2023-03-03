@@ -24,7 +24,7 @@ main .banner h3 {
   line-height: var(--type-heading-l-lh);
 }
 
-main .banner p:not(.detail-M) {
+main .banner p:not(.detail-m) {
   font-size: var(--type-body-m-size);
   line-height: var(--type-body-m-lh);
 }
@@ -325,7 +325,7 @@ main .banner.large p.button-container {
   order: -2;
 }
 
-main .banner.large .banner-content p.detail-M:first-child {
+main .banner.large .banner-content p.detail-m:first-child {
   padding-top: 16px;
 }
 
@@ -424,7 +424,7 @@ main .banner .banner-content h1:first-child,
 main .banner .banner-content h2:first-child,
 main .banner .banner-content h3:first-child,
 main .banner .banner-content h4:first-child,
-main .banner .banner-content p.detail-M:first-child {
+main .banner .banner-content p.detail-m:first-child {
   padding-top: 0;
 }
 
@@ -483,7 +483,7 @@ main .banner .banner-column.banner-image {
   main .banner .banner-content .banner-column {
     display: block;
   }
-  
+
   main .banner .banner-content .banner-column:nth-child(odd) {
     margin-right: auto;
     margin-left: 0;
@@ -540,7 +540,7 @@ main .banner .banner-column.banner-image {
 
   main .banner.right .banner-column:not(.banner-image) {
     text-align: right;
-  }    
+  }
 
   main .banner.right .banner-column h1,
   main .banner.right .banner-column h2 {
@@ -563,7 +563,7 @@ main .banner .banner-column.banner-image {
     max-height: unset;
   }
 
-  main .banner.large .banner-content p.detail-M:first-child {
+  main .banner.large .banner-content p.detail-m:first-child {
     padding-top: 0;
   }
 
@@ -616,7 +616,7 @@ main .banner .banner-column.banner-image {
     width: 520px;
     max-width: unset;
   }
-  
+
   main .banner .banner-column.banner-image:not(:empty) {
     width: 100%;
   }

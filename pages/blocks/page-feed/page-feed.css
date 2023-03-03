@@ -192,7 +192,7 @@ main .page-feed .pf-card .pf-card-text p {
   color: #747474;
 }
 
-main .page-feed .pf-card .pf-card-text p:not(.detail-M) {
+main .page-feed .pf-card .pf-card-text p:not(.detail-m) {
   font-size: var(--type-body-xs-size);
   line-height: var(--type-body-xs-lh);
 }
