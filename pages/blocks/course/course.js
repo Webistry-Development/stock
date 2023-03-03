@@ -11,11 +11,13 @@
  */
 
 import {
-  fetchPlaceholders,
   loadBlockCSS,
   createTag,
   makeRelative,
   decorateBlockAnalytics,
+  getConfig,
+  replaceKey,
+  toSentenceCase,
 } from '../../scripts/utils.js';
 
 function handlize(string) {
@@ -350,19 +352,25 @@ async function buildPayload(block, payload) {
 
 export default async function decorate(block) {
   decorateBlockAnalytics(block);
-  const results = await fetchPlaceholders((placeholders) => placeholders);
+  const config = getConfig();
+  const tabDescription = await replaceKey('description', config);
+  const tabResources = await replaceKey('resources', config);
+  const tabTakeaways = await replaceKey('takeaways', config);
+  const tabTranscript = await replaceKey('transcript', config);
+  const menuHeading = await replaceKey('lessons', config);
+  const menuShareHeading = await replaceKey('share-this-course', config);
 
   const payload = {
     videoIndex: 0,
     tabs: [],
     videos: [],
     placeholders: {
-      'course-tab-description': results['course-tab-description'] ? results['course-tab-description'] : 'Description',
-      'course-tab-resources': results['course-tab-resources'] ? results['course-tab-resources'] : 'Resources',
-      'course-tab-takeaways': results['course-tab-takeaways'] ? results['course-tab-takeaways'] : 'Takeaways',
-      'course-tab-transcript': results['course-tab-transcript'] ? results['course-tab-transcript'] : 'Transcript',
-      'course-menu-heading': results['course-menu-heading'] ? results['course-menu-heading'] : 'Lessons',
-      'course-menu-share-heading': results['course-menu-share-heading'] ? results['course-menu-share-heading'] : 'Share this course:',
+      'course-tab-description': toSentenceCase(tabDescription),
+      'course-tab-resources': toSentenceCase(tabResources),
+      'course-tab-takeaways': toSentenceCase(tabTakeaways),
+      'course-tab-transcript': toSentenceCase(tabTranscript),
+      'course-menu-heading': toSentenceCase(menuHeading),
+      'course-menu-share-heading': `${toSentenceCase(menuShareHeading)}:`,
     },
   };
 
