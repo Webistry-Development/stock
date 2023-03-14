@@ -49,11 +49,13 @@ main .page-feed .pf-card {
   justify-self: center;
 }
 
-main .page-feed.borderless .pf-card {
+main .page-feed.borderless .pf-card,
+main .page-feed.avatar .pf-card {
   background: transparent;
 }
 
-main .page-feed.borderless .pf-card {
+main .page-feed.borderless .pf-card,
+main .page-feed.avatar .pf-card {
   border: unset;
   border-radius: unset;
 }
@@ -70,7 +72,8 @@ main .page-feed .pf-card-text {
   flex-grow: 1;
 }
 
-main .page-feed.borderless .pf-card-text {
+main .page-feed.borderless .pf-card-text,
+main .page-feed.avatar .pf-card-text {
   padding: unset;
   padding-top: 20px;
 }
@@ -95,7 +98,8 @@ main .page-feed .pf-card-text > :first-child {
   padding-top: 0;
 }
 
-main .page-feed.borderless .pf-card-text > :first-child {
+main .page-feed.borderless .pf-card-text > :first-child,
+main .page-feed.avatar .pf-card-text > :first-child {
   min-height: unset;
   padding-bottom: 8px;
 }
@@ -135,7 +139,8 @@ main .page-feed.borderless:not(.horizontal):not(.pf-overlay) .pf-card-text > .bu
   padding-top: unset;
 }
 
-main .page-feed.borderless:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container:last-child a:only-child {
+main .page-feed.borderless:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container:last-child a:only-child,
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container:last-child a:only-child {
   margin: unset;
 }
 
@@ -187,7 +192,7 @@ main .page-feed .pf-card .pf-card-text p {
   color: #747474;
 }
 
-main .page-feed .pf-card .pf-card-text p:not(.detail-M) {
+main .page-feed .pf-card .pf-card-text p:not(.detail-m) {
   font-size: var(--type-body-xs-size);
   line-height: var(--type-body-xs-lh);
 }
@@ -564,11 +569,67 @@ main .section .page-feed + .content > p.button-container:first-child {
 }
 
 @media screen and (min-width: 1200px) {
-  main .page-feed.borderless.col-2-pf-cards > .pf-card {
+  main .page-feed.borderless.col-2-pf-cards > .pf-card,
+  main .page-feed.avatar.col-2-pf-cards > .pf-card {
     max-width: 700px;
   }
 
-  main .page-feed.borderless.pf-fit.col-2-pf-cards {
+  main .page-feed.borderless.pf-fit.col-2-pf-cards,
+  main .page-feed.avatar.pf-fit.col-2-pf-cards {
     max-width: 1000px;
   }
+}
+
+main .page-feed.avatar .pf-card-picture {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+main .page-feed.avatar .pf-card-picture img,
+main .page-feed.avatar .pf-card-picture video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+main .page-feed.avatar .pf-card {
+  max-width: 250px;
+  margin-bottom: 40px;
+}
+
+main .page-feed.avatar .pf-card-text {
+  text-align: center;
+}
+
+main .page-feed.avatar .pf-card-text > p.button-container {
+  text-align: center;
+  justify-content: center;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container {
+  justify-content: center;
+  border: unset;
+  padding-top: unset;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) img {
+  height: 25px;
+  transition: filter 0.2s;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) img:hover {
+  filter: brightness(0.9);
 }

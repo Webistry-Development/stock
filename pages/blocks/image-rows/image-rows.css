@@ -13,12 +13,22 @@ main .image-rows > div:not(.image-rows-caption) > div {
   margin: 0 auto;
 }
 
+main .image-rows > div:not(.image-rows-caption) > div > picture {
+  flex: auto;
+}
+
+main .image-rows > div:not(.image-rows-caption) > div > picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 main .image-rows > div > div > *:not(:last-child):not(em):not(strong):not(p):not(a) {
-  margin-right: 32px;
+  margin-right: 16px;
 }
 
 main .image-rows > div + div:not(.image-rows-caption) {
-  margin-top: 32px;
+  margin-top: 16px;
 }
 
 main .image-rows picture {

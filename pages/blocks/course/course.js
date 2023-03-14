@@ -15,6 +15,7 @@ import {
   loadBlockCSS,
   createTag,
   makeRelative,
+  decorateBlockAnalytics,
 } from '../../scripts/utils.js';
 
 function handlize(string) {
@@ -41,7 +42,7 @@ async function buildCards(block, payload) {
       const card = createTag('div', { class: 'pf-card' });
       const linkLayer = createTag('a', { class: 'pf-card-container-link' });
       const cardText = createTag('div', { class: 'pf-card-text' });
-      const grayText = createTag('p', { class: 'detail-M', id: handlize(category.subHeading) });
+      const grayText = createTag('p', { class: 'detail-m', id: handlize(category.subHeading) });
 
       const h3 = createTag('div', { class: handlize(link.textContent) });
       h3.textContent = link.textContent;
@@ -348,6 +349,7 @@ async function buildPayload(block, payload) {
 }
 
 export default async function decorate(block) {
+  decorateBlockAnalytics(block);
   const results = await fetchPlaceholders((placeholders) => placeholders);
 
   const payload = {

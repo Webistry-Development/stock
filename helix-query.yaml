@@ -19,7 +19,7 @@ indices:
           attribute(el, 'content')
       tags:
         select: head > meta[property="article:tag"]
-        value: |
+        values: |
           attribute(el, 'content')
       publicationDate:
         select: head > meta[name="publication-date"]

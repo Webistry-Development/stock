@@ -1,4 +1,7 @@
+import { decorateBlockAnalytics } from '../../scripts/utils.js';
+
 export default async function inArticleCta(block) {
+  decorateBlockAnalytics(block);
   const firstLayer = block.querySelector('div');
 
   block.classList.add('content');

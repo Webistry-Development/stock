@@ -49,7 +49,7 @@ main p:empty {
   padding: 0;
 }
 
-main p.detail-M {
+main p.detail-m {
   padding-top: 8px;
   padding-bottom: 8px;
   font-size: 12px;
@@ -60,18 +60,18 @@ main p.detail-M {
   font-weight: bold;
 }
 
-main p.detail-M + h1,
-main p.detail-M + h2,
-main p.detail-M + h3,
-main p.detail-M + h4 {
+main p.detail-m + h1,
+main p.detail-m + h2,
+main p.detail-m + h3,
+main p.detail-m + h4 {
   padding-top: 8px;
 }
 
-main p:not(.detail-M):not(.icon-area) + h1,
-main p:not(.detail-M):not(.icon-area) + h2,
-main p:not(.detail-M):not(.icon-area) + h3,
-main p:not(.detail-M):not(.icon-area) + h4
-main p:not(.detail-M):not(.icon-area) + p.detail-M {
+main p:not(.detail-m):not(.icon-area) + h1,
+main p:not(.detail-m):not(.icon-area) + h2,
+main p:not(.detail-m):not(.icon-area) + h3,
+main p:not(.detail-m):not(.icon-area) + h4,
+main p:not(.detail-m):not(.icon-area) + p.detail-m {
   padding-top: var(--block-spacing-m);
 }
 

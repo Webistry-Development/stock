@@ -2,6 +2,7 @@
 import { 
   createTag,
   createSVG,
+  decorateBlockAnalytics,
 } from '../../scripts/utils.js';
 
 function carouselAndLightbox(block) {
@@ -154,8 +155,8 @@ function buildCarousel(imgSlides, block, aspectRatio = '50%') {
   block.appendChild(wrapper);
   const prev = createTag('button', { class: 'image-carousel-arrow image-carousel-previous', 'aria-label': 'Previous slide', type: 'button' });
   const next = createTag('button', { class: 'image-carousel-arrow image-carousel-next', 'aria-label': 'Next slide', type: 'button' });
-  prev.appendChild(createSVG(`pages/blocks/image-carousel/image-carousel.svg`, 'chevron'));
-  next.appendChild(createSVG(`pages/blocks/image-carousel/image-carousel.svg`, 'chevron'));
+  prev.appendChild(createSVG(`/pages/blocks/image-carousel/image-carousel.svg`, 'chevron'));
+  next.appendChild(createSVG(`/pages/blocks/image-carousel/image-carousel.svg`, 'chevron'));
   controls.appendChild(prev);
   controls.appendChild(next);
   imgSlides.forEach((imgSlide, index) => {
@@ -164,7 +165,7 @@ function buildCarousel(imgSlides, block, aspectRatio = '50%') {
     imgSlide.img.tabIndex = 0;
     imgSlide.ariaLabel = `Slide ${index + 1}`;
     const expandButton = createTag('button', { class: 'image-carousel-expand', 'aria-label': 'Open in full screen', type: 'button' });
-    expandButton.appendChild(createSVG(`pages/blocks/image-carousel/image-carousel.svg`, 'expand'));
+    expandButton.appendChild(createSVG(`/pages/blocks/image-carousel/image-carousel.svg`, 'expand'));
     slide.appendChild(expandButton);
     slideswrapper.appendChild(slide);
     const dot = createTag('button', { class: 'image-carousel-dot', 'aria-label': `Slide ${index + 1}`, type: 'button' });
@@ -174,7 +175,7 @@ function buildCarousel(imgSlides, block, aspectRatio = '50%') {
   const lightbox = wrapper.cloneNode(true);
   lightbox.classList.add('image-carousel-lightbox');
   const closeButton = createTag('button', { class: 'image-carousel-close-lightbox', 'aria-label': 'Close full screen', 'type': 'button'  });
-  closeButton.appendChild(createSVG(`pages/blocks/image-carousel/image-carousel.svg`, 'close'));
+  closeButton.appendChild(createSVG(`/pages/blocks/image-carousel/image-carousel.svg`, 'close'));
   lightbox.appendChild(closeButton);
   block.appendChild(lightbox);
   const lightboxThumbnails = lightbox.querySelectorAll('.image-carousel-dot');
@@ -186,6 +187,7 @@ function buildCarousel(imgSlides, block, aspectRatio = '50%') {
 }
 
 export default function imageCarousel(block) {
+  decorateBlockAnalytics(block);
   const imgs = block.querySelectorAll('picture');
   const imgSlides = [];
   let aspectRatio;

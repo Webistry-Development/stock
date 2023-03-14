@@ -1,6 +1,12 @@
-import { getMetadata, createTag, fetchPlaceholders } from '../../scripts/utils.js';
+import { 
+  getMetadata,
+  createTag,
+  fetchPlaceholders,
+  decorateBlockAnalytics,
+} from '../../scripts/utils.js';
 
 export default async function authors(block) {
+  decorateBlockAnalytics(block);
   const metaAuthors = getMetadata('authors');
   const placeholders = await fetchPlaceholders((placeholders) => placeholders);
 

@@ -1,4 +1,5 @@
 import {
+  decorateBlockAnalytics,
   createTag,
   transformLinkToAnimation,
   makeRelative,
@@ -213,6 +214,7 @@ function decorateCards(block, cards, payload) {
 }
 
 export default async function pageFeed(block) {
+  decorateBlockAnalytics(block);
   const payload = {
     offset: 0,
     limit: 8,
@@ -277,4 +279,9 @@ export default async function pageFeed(block) {
 
   block.innerHTML = '';
   decorateCards(block, cards, payload);
+  block.querySelectorAll('a.button').forEach((button) => {
+    if (button.textContent === '') {
+      button.classList.remove('button');
+    }
+  });
 }

@@ -1,7 +1,4 @@
-import { getNavbarHeight } from '../../scripts/utils.js';
-
 export default async function anchorSection(block) {
-  const navbarHeight = await getNavbarHeight();
   const anchor = block.textContent.trim();
   if (!anchor[0] === '#') return;
   const section = block.closest('main > .section');
@@ -17,7 +14,7 @@ export default async function anchorSection(block) {
       });
       section.classList.add('anchor-section-toggle--active');
       section.classList.remove('anchor-section-toggle--hidden');
-      window.scroll({ top: section.offsetTop - navbarHeight, left: 0, behavior: 'smooth', });
+      window.scroll({ top: section.offsetTop - 97, left: 0, behavior: 'smooth', });
     });
   });
 }
