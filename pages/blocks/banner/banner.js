@@ -1,4 +1,4 @@
-import { transformLinkToAnimation, decorateBlockAnalytics } from '../../scripts/utils.js';
+import { decorateBlockAnalytics } from '../../scripts/utils.js';
 
 export default function banner(block) {
   decorateBlockAnalytics(block);
@@ -14,18 +14,11 @@ export default function banner(block) {
   bg.classList.add('background');
   Array.from(bg.querySelectorAll('p')).forEach((p) => p.classList.remove('button-container'));
   Array.from(bg.querySelectorAll('a')).forEach((a) => a.classList.remove('button'));
-  let bgImg = bg.querySelector('picture');
-  // Set background to text value if there is no image:
-  if (!bgImg) {
-    const aLink = bg.querySelector('a');
-    if (aLink && aLink.href.endsWith('.mp4')) {
-      transformLinkToAnimation(aLink);
-      bgImg = aLink;
-    } else {
-      bg.style.background = bg.textContent;
-      bg.innerHTML = '';
-    }
-  } else if (bgImg.parentElement.tagName.toLowerCase === 'p') {
+  const bgImg = bg.querySelector('picture');
+  if (!bgImg && bg.textContent.trim().startsWith('#')) {
+    bg.style.background = bg.textContent;
+    bg.innerHTML = '';
+  } else if (bgImg && bgImg.parentElement.tagName.toLowerCase === 'p') {
     bgImg.parentElement.parentElement.appendChild(bgImg);
   }
   const content = block.querySelector(':scope > div:nth-of-type(2)');
@@ -39,7 +32,6 @@ export default function banner(block) {
         cell.classList.add('banner-image');
         content.classList.add('has-inline-image')
       }
-      // remove empty p from empty columns
       const emptyP = cell.querySelector(':scope > p:first-child:last-child');
       if (emptyP && emptyP.childNodes.length === 0) emptyP.remove();
     });
