@@ -27,6 +27,8 @@ const CONFIG = {
   // imsClientId: 'college',
   contentRoot: '/pages',
   codeRoot: '/pages',
+  stage: { edgeConfigId: '9a1395f3-a8e1-4287-8625-58c6bddb08f8' },
+  prod: { edgeConfigId: 'da157e66-32ea-47df-bee3-55901c66e46f' },
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
     br: { ietf: 'pt-BR', tk: 'inq1xob.css' },
