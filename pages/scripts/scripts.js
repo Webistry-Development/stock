@@ -19,6 +19,7 @@ import {
   externalLinks,
   gnavUnderline,
   handleAnchors,
+  createOptimizedPicture, automateFromMetadata,
 } from './utils.js';
 
 const LIBS = 'https://milo.adobe.com/libs';
@@ -62,6 +63,10 @@ const miloLibs = setLibs(LIBS);
 const { loadArea, loadDelayed, setConfig } = await import(`${miloLibs}/utils/utils.js`);
 
 (async function loadPage() {
+  if (window.location.href.includes('/pages/artisthub/authors')) {
+    automateFromMetadata(['author-name', 'author-description', 'author-portrait']);
+  }
+
   setConfig({ ...CONFIG, miloLibs });
   decorateButtons();
   turnH6intoDetailM();
