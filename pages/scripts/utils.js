@@ -26,36 +26,17 @@ export const [setLibs, getLibs] = (() => {
 })();
 const LIBS = 'https://milo.adobe.com/libs';
 const miloLibs = setLibs(LIBS);
-export const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
-export const { decorateBlockAnalytics } = await import(`${miloLibs}/martech/attributes.js`);
-export const { decorateLinkAnalytics } = await import(`${miloLibs}/martech/attributes.js`);
-export const { createTag } = await import(`${miloLibs}/utils/utils.js`);
+export const { createTag, getConfig } = await import(`${miloLibs}/utils/utils.js`);
+export const { replaceKey } = await import(`${miloLibs}/features/placeholders.js`);
+export const { decorateBlockAnalytics, decorateLinkAnalytics } = await import(`${miloLibs}/martech/attributes.js`);
+export const NAVBAR_HEIGHT = 97
 
 export function toClassName(name) {
   return (name && typeof name === 'string') ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-') : '';
 }
 
-export async function fetchPlaceholders() {
-  const { locale } = getConfig();
-  const localeRoot = locale.contentRoot;
-  if (!window.placeholders) {
-    try {
-      const resp = await fetch(`${localeRoot}/pages/artisthub/placeholders.json`);
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
-    } catch {
-      const resp = await fetch('/pages/artisthub/placeholders.json');
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
-    }
-  }
-  return window.placeholders;
+export function toSentenceCase(str) {
+  return (str && typeof str === 'string') ? str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()) : '';
 }
 
 export function transformLinkToAnimation(a) {
@@ -280,7 +261,7 @@ export async function handleAnchors() {
     if (window.location.hash === toggleSection.getAttribute('data-anchor-section')) {
       toggleSection.classList.add('anchor-section-toggle--active');
       await delay(500);
-      window.scroll({ top: toggleSection.offsetTop - 97, left: 0, behavior: 'smooth' });
+      window.scroll({ top: toggleSection.offsetTop - NAVBAR_HEIGHT, left: 0, behavior: 'smooth' });
     } else if (index === 0 && !window.location.hash) {
       toggleSection.classList.add('anchor-section-toggle--active');
     } else {

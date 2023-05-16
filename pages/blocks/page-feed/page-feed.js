@@ -4,10 +4,10 @@ import {
   transformLinkToAnimation,
   makeRelative,
   turnH6intoDetailM,
-  fetchPlaceholders,
+  getConfig,
+  replaceKey,
+  toSentenceCase,
 } from '../../scripts/utils.js';
-
-const placeholders = await fetchPlaceholders((result) => result);
 
 function getFetchRange(payload) {
   let range;
@@ -115,13 +115,14 @@ function buildCard(card, overlay = false) {
   return card;
 }
 
-function decorateLoadMoreButton(block) {
+async function decorateLoadMoreButton(block) {
   const loadMoreWrapper = createTag('div', { class: 'content' });
   const loadMoreContainer = createTag('p', { class: 'button-container' });
   const loadMore = document.createElement('a');
   loadMore.className = 'button transparent';
   loadMore.href = '#';
-  loadMore.textContent = placeholders['load-more'];
+  const placeholder = await replaceKey('load-more', getConfig());
+  loadMore.textContent = toSentenceCase(placeholder);
   loadMoreContainer.append(loadMore);
   loadMoreWrapper.append(loadMoreContainer);
   block.insertAdjacentElement('afterend', loadMoreWrapper);
@@ -151,7 +152,7 @@ function getCols(total) {
   return len;
 }
 
-function decorateCards(block, cards, payload) {
+async function decorateCards(block, cards, payload) {
   if (payload.cardsToBuild.length < payload.limit) {
     payload.cols = getCols(payload.cardsToBuild.length);
     payload.limit = payload.cols % 2 ? 6 : 8;
@@ -187,7 +188,7 @@ function decorateCards(block, cards, payload) {
   const newRange = getFetchRange(payload);
 
   if (payload.offset < payload.cardsToBuild.length) {
-    const loadMoreObject = decorateLoadMoreButton(block);
+    const loadMoreObject = await decorateLoadMoreButton(block);
     loadMoreObject.button.addEventListener('click', async (event) => {
       event.preventDefault();
       loadMoreObject.wrapper.remove();
@@ -210,6 +211,8 @@ function decorateCards(block, cards, payload) {
 
       decorateCards(block, newCards, payload);
     });
+
+    if (block.querySelectorAll('.pf-card').length <= 0) loadMoreObject.wrapper.remove();
   }
 }
 
@@ -254,7 +257,7 @@ export default async function pageFeed(block) {
           }
         }
       } else {
-        payload.cardsToBuild = pageLinks;
+        payload.cardsToBuild = Array.from(pageLinks);
         payload.loadFromJson = false;
         const range = getFetchRange(payload);
         for (let i = 0; i < range; i += 1) {

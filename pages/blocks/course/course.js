@@ -11,7 +11,9 @@
  */
 
 import {
-  fetchPlaceholders,
+  getConfig,
+  replaceKey,
+  toSentenceCase,
   loadBlockCSS,
   createTag,
   makeRelative,
@@ -147,7 +149,7 @@ function decorateTabbedArea($block, payload) {
 
   payload.tabs.forEach((tab, index) => {
     if (!isEmptyTab(tab)) {
-      const $tab = createTag('a', { class: `tab tab-${tab.heading.toLowerCase()}` });
+      const $tab = createTag('a', { class: 'tab' });
       if (index === 0) {
         $tab.classList.add('active');
       }
@@ -167,8 +169,7 @@ function decorateTabbedArea($block, payload) {
         }
       });
     } else if (index === 0) {
-      const tabName = payload.placeholders['course-tab-description'];
-      const $tab = createTag('a', { class: `tab tab-${tabName.toLowerCase()}` });
+      const $tab = createTag('a', { class: 'tab' });
       $tab.classList.add('active');
       $tab.textContent = tab.heading;
       $tabs.append($tab);
@@ -184,11 +185,11 @@ function decorateTabbedArea($block, payload) {
 
     if (index === 1) {
       const tabName = payload.placeholders['course-tab-transcript'];
-      const $transcriptTab = createTag('a', { class: `tab tab-${tabName.toLowerCase()}` });
+      const $transcriptTab = createTag('a', { class: 'tab' });
       $transcriptTab.textContent = tabName;
       $tabs.append($transcriptTab);
 
-      const paragraphs = payload.videos[payload.videoIndex][`${tabName}`].split('\n');
+      const paragraphs = payload.videos[payload.videoIndex].Transcript.split('\n');
       if (paragraphs.length <= 1 && paragraphs[0] === '') {
         $transcriptTab.style.display = 'none';
       }
@@ -350,19 +351,25 @@ async function buildPayload(block, payload) {
 
 export default async function decorate(block) {
   decorateBlockAnalytics(block);
-  const results = await fetchPlaceholders((placeholders) => placeholders);
+  const config = getConfig();
+  const tabDescription = await replaceKey('description', config);
+  const tabResources = await replaceKey('resources', config);
+  const tabTakeaways = await replaceKey('takeaways', config);
+  const tabTranscript = await replaceKey('transcript', config);
+  const menuHeading = await replaceKey('lessons', config);
+  const menuShareHeading = await replaceKey('share-this-course', config);
 
   const payload = {
     videoIndex: 0,
     tabs: [],
     videos: [],
     placeholders: {
-      'course-tab-description': results['course-tab-description'] ? results['course-tab-description'] : 'Description',
-      'course-tab-resources': results['course-tab-resources'] ? results['course-tab-resources'] : 'Resources',
-      'course-tab-takeaways': results['course-tab-takeaways'] ? results['course-tab-takeaways'] : 'Takeaways',
-      'course-tab-transcript': results['course-tab-transcript'] ? results['course-tab-transcript'] : 'Transcript',
-      'course-menu-heading': results['course-menu-heading'] ? results['course-menu-heading'] : 'Lessons',
-      'course-menu-share-heading': results['course-menu-share-heading'] ? results['course-menu-share-heading'] : 'Share this course:',
+      'course-tab-description': toSentenceCase(tabDescription),
+      'course-tab-resources': toSentenceCase(tabResources),
+      'course-tab-takeaways': toSentenceCase(tabTakeaways),
+      'course-tab-transcript': toSentenceCase(tabTranscript),
+      'course-menu-heading': toSentenceCase(menuHeading),
+      'course-menu-share-heading': `${toSentenceCase(menuShareHeading)}:`,
     },
   };
 
