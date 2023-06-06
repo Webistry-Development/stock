@@ -160,7 +160,7 @@ export async function run() {
   endTime = new Date();
   document.getElementById('results').textContent = '';
 
-  await loadSitemap('/express/sitemap.xml');
+  await loadSitemap('/pages/artisthub/sitemap-index.xml');
   const resultDisplay = document.body;
   const sitemap = sitemapURLs;
   let pattern = document.getElementById('input').value;
