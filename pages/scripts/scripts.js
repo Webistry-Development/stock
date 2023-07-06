@@ -21,7 +21,7 @@ import {
   handleAnchors,
 } from './utils.js';
 
-const LIBS = 'https://milo.adobe.com/libs';
+const LIBS = 'https://shortcard--milo--wbstry.hlx.live/libs';
 const STYLES = '/pages/styles/styles.css';
 const CONFIG = {
   // imsClientId: 'college',
