@@ -1,13 +1,23 @@
 import {
-  decorateBlockAnalytics,
   createTag,
-  transformLinkToAnimation,
-  makeRelative,
-  turnH6intoDetailM,
+  decorateBlockAnalytics,
   getConfig,
   replaceKey,
   toSentenceCase,
+  transformLinkToAnimation,
+  turnH6intoDetailM,
 } from '../../scripts/utils.js';
+
+export function makeRelative(href) {
+  const projectName = 'stock--adobecom';
+  const productionDomains = ['stock.adobe.com'];
+  const fixedHref = href.replace(/\u2013|\u2014/g, '--');
+  const hosts = [`${projectName}.hlx.page`, `${projectName}.hlx.live`, ...productionDomains];
+  const url = new URL(fixedHref);
+  const relative = hosts.some((host) => url.hostname.includes(host))
+    || url.hostname === window.location.hostname;
+  return relative ? `${url.pathname}${url.search}${url.hash}` : href;
+}
 
 function getFetchRange(payload) {
   let range;
@@ -22,6 +32,7 @@ function getFetchRange(payload) {
 }
 
 export async function loadPageFeedCard(a) {
+  if (!a) return null;
   const href = (typeof (a) === 'string') ? a : a.href;
   const path = makeRelative(href);
   if (!path.startsWith('/')) return null;
@@ -31,29 +42,31 @@ export async function loadPageFeedCard(a) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   const pfCard = doc.querySelector('.page-feed-card > div');
-  if (pfCard) {
-    turnH6intoDetailM(pfCard);
-    const aEl = (a && a.nodeType) ? a : createTag('a', { href: path });
-    pfCard.append(createTag('div', {}, aEl));
-    // eslint-disable-next-line consistent-return
-    return pfCard;
-  }
+  if (!pfCard) return null;
+
+  turnH6intoDetailM(pfCard);
+  const aEl = (a && a.nodeType) ? a : createTag('a', { href: path });
+  pfCard.append(createTag('div', {}, aEl));
+
+  return pfCard;
 }
 
 export async function loadPageFeedFromSpreadsheet(sheetUrl) {
   const path = makeRelative(sheetUrl);
   if (!path.startsWith('/')) return null;
   const resp = await fetch(path);
-  if (!resp.ok) return;
+  if (!resp.ok) return null;
   const json = await resp.json();
   const returnUrls = [];
   json.data.forEach((row) => {
-    returnUrls.push({ link: row['page-url'], setting: row['setting'] });
+    returnUrls.push({ link: row['page-url'], setting: row.setting });
   });
   return returnUrls;
 }
 
 function buildCard(card, overlay = false) {
+  if (!card) return null;
+
   card.classList.add('pf-card');
   const cells = Array.from(card.children);
   let hasLink = false;
@@ -94,6 +107,7 @@ function buildCard(card, overlay = false) {
       cell.remove();
     }
   });
+
   if (hasLink) {
     const cardLink = card.querySelector('.pf-card-link a');
     if (cardLink) {
@@ -112,6 +126,7 @@ function buildCard(card, overlay = false) {
     div.classList.add('pf-card-overlay');
     card.appendChild(div);
   }
+
   return card;
 }
 
@@ -193,30 +208,49 @@ async function decorateCards(block, cards, payload) {
       event.preventDefault();
       loadMoreObject.wrapper.remove();
 
-      const newCards = [];
+      const newCardsLoaded = [];
 
       for (let i = payload.offset; i < newRange; i += 1) {
+        let feedLink;
         if (payload.loadFromJson) {
-          if (payload.cardsToBuild[i].setting !== 'in_featured_pod') {
-            const card = await loadPageFeedCard(payload.cardsToBuild[i].link);
-            if (card) newCards.push(buildCard(card, payload.overlay));
-          }
-        } else if (payload.cardsToBuild[i] && payload.cardsToBuild[i].href) {
-          const card = await loadPageFeedCard(payload.cardsToBuild[i]);
-          if (card) newCards.push(buildCard(card, payload.overlay));
+          if (payload.cardsToBuild[i].setting === 'in_featured_pod') return;
+          feedLink = payload.cardsToBuild[i].link;
         } else {
-          newCards.push(buildCard(payload.cardsToBuild[i], payload.overlay));
+          feedLink = payload.cardsToBuild[i].href || payload.cardsToBuild[i];
         }
+
+        newCardsLoaded.push(loadPageFeedCard(feedLink));
       }
 
-      decorateCards(block, newCards, payload);
+      Promise.all(newCardsLoaded).then((newCards) => {
+        const cardsToBuild = newCards.map((card) => buildCard(card, payload.overlay));
+        decorateCards(block, cardsToBuild, payload);
+      });
     });
 
     if (block.querySelectorAll('.pf-card').length <= 0) loadMoreObject.wrapper.remove();
   }
+
+  block.classList.remove('loading');
+}
+
+function renderCards(block, payload, cards, undefinedCards) {
+  undefinedCards.forEach((index) => {
+    payload.cardsToBuild.splice(index, 1);
+  });
+
+  block.innerHTML = '';
+  decorateCards(block, cards, payload);
+
+  block.querySelectorAll('a.button').forEach((button) => {
+    if (button.textContent === '') {
+      button.classList.remove('button');
+    }
+  });
 }
 
 export default async function pageFeed(block) {
+  block.classList.add('loading');
   decorateBlockAnalytics(block);
   const payload = {
     offset: 0,
@@ -236,55 +270,69 @@ export default async function pageFeed(block) {
     block.classList.add('pf-overlay');
     block.classList.remove('overlay');
   }
+  const linksFromSpreadsheet = [];
+  const cardsLoaded = [];
 
-  for (let n = 0; n < rows.length; n += 1) {
-    const { children } = rows[n];
+  rows.forEach((row) => {
+    const { children } = row;
     if (children.length > 0 && children[0].querySelector('ul')) {
       const pageLinks = children[0].querySelector('ul').querySelectorAll('a');
+
       if (pageLinks[0] && pageLinks[0].href && pageLinks[0].href.endsWith('.json')) {
         payload.loadFromJson = true;
-        const linksFromSpreadsheet = await loadPageFeedFromSpreadsheet(pageLinks[0].href);
-        payload.cardsToBuild = linksFromSpreadsheet.filter((link) => link && link.setting !== 'in_featured_pod');
-        if (payload.cardsToBuild && payload.cardsToBuild.length) {
-          const range = getFetchRange(payload);
-          for (let x = 0; x < range; x += 1) {
-            const card = await loadPageFeedCard(payload.cardsToBuild[x].link);
-            if (card) {
-              cards.push(buildCard(card, overlay));
-            } else {
-              undefinedCards.push(x);
-            }
-          }
-        }
+        linksFromSpreadsheet.push(loadPageFeedFromSpreadsheet(pageLinks[0].href));
       } else {
         payload.cardsToBuild = Array.from(pageLinks);
         payload.loadFromJson = false;
         const range = getFetchRange(payload);
+
         for (let i = 0; i < range; i += 1) {
           if (pageLinks[i] && pageLinks[i].href) {
-            const card = await loadPageFeedCard(pageLinks[i]);
-            if (card) {
-              cards.push(buildCard(card, overlay));
-            } else {
-              undefinedCards.push(i);
-            }
+            const card = loadPageFeedCard(pageLinks[i].href);
+            cardsLoaded.push(card);
           }
         }
       }
     } else {
-      cards.push(buildCard(rows[n], overlay));
+      cards.push(buildCard(row, overlay));
     }
+  });
+
+  if (payload.loadFromJson) {
+    Promise.all(linksFromSpreadsheet).then((links) => {
+      [payload.cardsToBuild] = links.filter((link) => link && link.setting !== 'in_featured_pod');
+
+      if (payload?.cardsToBuild?.length) {
+        const range = getFetchRange(payload);
+        for (let x = 0; x < range; x += 1) {
+          const card = loadPageFeedCard(payload.cardsToBuild[x].link);
+          cardsLoaded.push(card);
+        }
+      }
+
+      Promise.all(cardsLoaded).then((feeds) => {
+        feeds.forEach((card, index) => {
+          if (card) {
+            cards.push(buildCard(card, overlay));
+          } else {
+            undefinedCards.push(index);
+          }
+        });
+
+        renderCards(block, payload, cards, undefinedCards);
+      });
+    });
+  } else {
+    Promise.all(cardsLoaded).then((feeds) => {
+      feeds.forEach((card, index) => {
+        if (card) {
+          cards.push(buildCard(card, overlay));
+        } else {
+          undefinedCards.push(index);
+        }
+      });
+
+      renderCards(block, payload, cards, undefinedCards);
+    });
   }
-
-  undefinedCards.forEach((index) => {
-    payload.cardsToBuild.splice(index, 1);
-  });
-
-  block.innerHTML = '';
-  decorateCards(block, cards, payload);
-  block.querySelectorAll('a.button').forEach((button) => {
-    if (button.textContent === '') {
-      button.classList.remove('button');
-    }
-  });
 }

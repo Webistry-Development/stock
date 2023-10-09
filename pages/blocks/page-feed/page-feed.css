@@ -12,14 +12,30 @@ main .page-feed {
   display: grid;
   justify-content: center;
   align-items: stretch;
-  margin: 0;
-  margin-top: var(--block-spacing-m);
-  margin-left: auto;
-  margin-right: auto;
+  margin: var(--block-spacing-m) auto 0;
   gap: 24px;
   max-width: var(--grid-container-width);
-  margin-left: auto;
-  margin-right: auto;
+}
+
+main .page-feed.loading > div {
+  visibility: hidden;
+}
+
+main .page-feed.loading {
+  position: relative;
+}
+
+main .page-feed.loading::after {
+  content: '';
+  background: url('loader-circle.gif') center center no-repeat;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  min-height: 200px;
+  max-width: none;
 }
 
 main .page-feed:last-child {
