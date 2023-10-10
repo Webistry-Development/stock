@@ -1,15 +1,57 @@
 import {
   createTag,
-  decorateBlockAnalytics,
   getConfig,
   replaceKey,
-  toSentenceCase,
-  transformLinkToAnimation,
-  turnH6intoDetailM,
 } from '../../scripts/utils.js';
 
+function turnH6intoDetailM(scope = document) {
+  scope.querySelectorAll('h6').forEach((h6) => {
+    const p = createTag('p', { class: 'detail-m' }, h6.innerHTML);
+    const attrs = h6.attributes;
+    for (let i = 0, len = attrs.length; i < len; i += 1) {
+      p.setAttribute(attrs[i].name, attrs[i].value);
+    }
+    h6.parentNode.replaceChild(p, h6);
+  });
+}
+
+function toSentenceCase(str) {
+  return (str && typeof str === 'string') ? str.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase()) : '';
+}
+
+function transformLinkToAnimation(a) {
+  if (!a || !a.href.includes('.mp4')) return null;
+  const params = new URL(a.href).searchParams;
+  const attribs = {};
+  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
+    if (params.get(p) !== 'false') attribs[p] = '';
+  });
+  // use the closest picture as poster
+  const poster = a.closest('div').querySelector('picture source');
+  if (poster) {
+    attribs.poster = poster.srcset;
+    poster.parentNode.remove();
+  }
+  // replace anchor with video element
+  const videoUrl = new URL(a.href);
+  const helixId = videoUrl.hostname.includes('hlx.blob.core') ? videoUrl.pathname.split('/')[2] : videoUrl.pathname.split('media_')[1].split('.')[0];
+  const videoHref = `media_${helixId}.mp4`;
+  const video = createTag('video', attribs);
+  video.innerHTML = `<source src="${videoHref}" type="video/mp4">`;
+  const innerDiv = a.closest('div');
+  innerDiv.prepend(video);
+  innerDiv.classList.add('hero-animation-overlay');
+  a.replaceWith(video);
+  // autoplay animation
+  video.addEventListener('canplay', () => {
+    video.muted = true;
+    video.play();
+  });
+  return video;
+}
+
 export function makeRelative(href) {
-  const projectName = 'stock--adobecom';
+  const projectName = 'adobestock--adobecom';
   const productionDomains = ['stock.adobe.com'];
   const fixedHref = href.replace(/\u2013|\u2014/g, '--');
   const hosts = [`${projectName}.hlx.page`, `${projectName}.hlx.live`, ...productionDomains];
@@ -33,11 +75,14 @@ function getFetchRange(payload) {
 
 export async function loadPageFeedCard(a) {
   if (!a) return null;
+
   const href = (typeof (a) === 'string') ? a : a.href;
   const path = makeRelative(href);
   if (!path.startsWith('/')) return null;
+
   const resp = await fetch(`${path}.plain.html`);
   if (!resp.ok) return null;
+
   const html = await resp.text();
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
@@ -51,35 +96,20 @@ export async function loadPageFeedCard(a) {
   return pfCard;
 }
 
-export async function loadPageFeedFromSpreadsheet(sheetUrl) {
-  const path = makeRelative(sheetUrl);
-  if (!path.startsWith('/')) return null;
-  const resp = await fetch(path);
-  if (!resp.ok) return null;
-  const json = await resp.json();
-  const returnUrls = [];
-  json.data.forEach((row) => {
-    returnUrls.push({ link: row['page-url'], setting: row.setting });
-  });
-  return returnUrls;
-}
-
 function buildCard(card, overlay = false) {
   if (!card) return null;
 
   card.classList.add('pf-card');
   const cells = Array.from(card.children);
-  let hasLink = false;
+  let hasLink;
   cells.forEach((cell, index) => {
     if (index === 0) {
-      const pic = cell.querySelector('picture:first-child:last-child');
-      if (pic) {
+      if (cell.querySelector('picture:first-child:last-child')) {
         cell.classList.add('pf-card-picture');
       } else {
         const a = cell.querySelector('a');
         if (a && a.href.endsWith('.mp4')) {
-          let video = null;
-          video = transformLinkToAnimation(a);
+          const video = transformLinkToAnimation(a);
           cell.innerHTML = '';
           if (video) {
             cell.appendChild(video);
@@ -89,21 +119,31 @@ function buildCard(card, overlay = false) {
           cell.classList.add('pf-card-text');
         }
       }
-    } else if (index === 1) {
+    }
+
+    if (index === 1) {
       cell.classList.add('pf-card-text');
-    } else if (index === 2) {
+    }
+
+    if (index === 2) {
       const cardLink = cell.querySelector('a');
       if (cardLink) {
         cell.classList.add('pf-card-link');
         hasLink = true;
       }
-    } else if (index === 3 && card.querySelector('.pf-card-text')) {
+    }
+
+    if (index === 3) {
+      if (!card.querySelector('.pf-card-text')) return;
+
       cell.classList.add('pf-card-banner');
       const cardTag = createTag('div');
       cardTag.innerHTML = cell.innerHTML;
       cell.innerHTML = '';
       cell.appendChild(cardTag);
-    } else {
+    }
+
+    if (index > 3) {
       cell.remove();
     }
   });
@@ -121,6 +161,7 @@ function buildCard(card, overlay = false) {
       card.querySelector('.pf-card-link').remove();
     }
   }
+
   if (overlay) {
     const div = document.createElement('div');
     div.classList.add('pf-card-overlay');
@@ -234,8 +275,8 @@ async function decorateCards(block, cards, payload) {
   block.classList.remove('loading');
 }
 
-function renderCards(block, payload, cards, undefinedCards) {
-  undefinedCards.forEach((index) => {
+function renderCards(block, payload, cards) {
+  payload.trashBin.forEach((index) => {
     payload.cardsToBuild.splice(index, 1);
   });
 
@@ -249,19 +290,21 @@ function renderCards(block, payload, cards, undefinedCards) {
   });
 }
 
-export default async function pageFeed(block) {
+export default async function init(block) {
+  // place-hold the block with loading circle
   block.classList.add('loading');
-  decorateBlockAnalytics(block);
+
   const payload = {
     offset: 0,
     limit: 8,
     cols: 4,
+    trashBin: [],
   };
-  const undefinedCards = [];
+
   const rows = Array.from(block.children);
   payload.cardsToBuild = rows;
-  const cards = [];
-  const overlay = (block.classList.contains('overlay'));
+
+  const overlay = block.classList.contains('overlay');
   payload.overlay = overlay;
   if (block.classList.contains('fit')) {
     block.classList.add('pf-fit');
@@ -270,7 +313,8 @@ export default async function pageFeed(block) {
     block.classList.add('pf-overlay');
     block.classList.remove('overlay');
   }
-  const linksFromSpreadsheet = [];
+
+  const cards = [];
   const cardsLoaded = [];
 
   rows.forEach((row) => {
@@ -278,19 +322,13 @@ export default async function pageFeed(block) {
     if (children.length > 0 && children[0].querySelector('ul')) {
       const pageLinks = children[0].querySelector('ul').querySelectorAll('a');
 
-      if (pageLinks[0] && pageLinks[0].href && pageLinks[0].href.endsWith('.json')) {
-        payload.loadFromJson = true;
-        linksFromSpreadsheet.push(loadPageFeedFromSpreadsheet(pageLinks[0].href));
-      } else {
-        payload.cardsToBuild = Array.from(pageLinks);
-        payload.loadFromJson = false;
-        const range = getFetchRange(payload);
+      payload.cardsToBuild = Array.from(pageLinks);
+      const range = getFetchRange(payload);
 
-        for (let i = 0; i < range; i += 1) {
-          if (pageLinks[i] && pageLinks[i].href) {
-            const card = loadPageFeedCard(pageLinks[i].href);
-            cardsLoaded.push(card);
-          }
+      for (let i = 0; i < range; i += 1) {
+        if (pageLinks[i] && pageLinks[i].href) {
+          const card = loadPageFeedCard(pageLinks[i].href);
+          cardsLoaded.push(card);
         }
       }
     } else {
@@ -298,41 +336,15 @@ export default async function pageFeed(block) {
     }
   });
 
-  if (payload.loadFromJson) {
-    Promise.all(linksFromSpreadsheet).then((links) => {
-      [payload.cardsToBuild] = links.filter((link) => link && link.setting !== 'in_featured_pod');
-
-      if (payload?.cardsToBuild?.length) {
-        const range = getFetchRange(payload);
-        for (let x = 0; x < range; x += 1) {
-          const card = loadPageFeedCard(payload.cardsToBuild[x].link);
-          cardsLoaded.push(card);
-        }
+  Promise.all(cardsLoaded).then((feeds) => {
+    feeds.forEach((card, index) => {
+      if (card) {
+        cards.push(buildCard(card, overlay));
+      } else {
+        payload.trashBin.push(index);
       }
-
-      Promise.all(cardsLoaded).then((feeds) => {
-        feeds.forEach((card, index) => {
-          if (card) {
-            cards.push(buildCard(card, overlay));
-          } else {
-            undefinedCards.push(index);
-          }
-        });
-
-        renderCards(block, payload, cards, undefinedCards);
-      });
     });
-  } else {
-    Promise.all(cardsLoaded).then((feeds) => {
-      feeds.forEach((card, index) => {
-        if (card) {
-          cards.push(buildCard(card, overlay));
-        } else {
-          undefinedCards.push(index);
-        }
-      });
 
-      renderCards(block, payload, cards, undefinedCards);
-    });
-  }
+    renderCards(block, payload, cards, payload.trashBin);
+  });
 }
