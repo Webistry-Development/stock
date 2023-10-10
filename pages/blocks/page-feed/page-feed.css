@@ -12,7 +12,7 @@ main .page-feed {
   display: grid;
   justify-content: center;
   align-items: stretch;
-  margin: var(--block-spacing-m) auto 0;
+  margin: 80px auto 0;
   gap: 24px;
   max-width: var(--grid-container-width);
 }
@@ -39,11 +39,25 @@ main .page-feed.loading::after {
 }
 
 main .page-feed:last-child {
-  margin-bottom: var(--block-spacing-m);
+  margin-bottom: 80px;
+}
+
+main .page-feed + .page-feed {
+  margin-top: 24px;
 }
 
 main > .section.has-background > .page-feed:last-child {
   margin-bottom: 0;
+}
+
+main .page-feed a {
+  text-decoration: none;
+}
+
+main .page-feed + p,
+main .page-feed + a {
+  margin-top: -20px;
+  padding-top: 0;
 }
 
 main .page-feed .pf-card > a {
@@ -51,6 +65,19 @@ main .page-feed .pf-card > a {
   font-weight: unset;
   font-size: unset;
   line-height: unset;
+  border-color: unset;
+  background: unset;
+  border-radius: unset;
+  padding: unset;
+  margin: unset;
+  height: 100%;
+  text-align: unset;
+  transition: unset;
+  border: unset;
+  white-space: unset;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
 }
 
 main .page-feed .pf-card {
@@ -68,21 +95,12 @@ main .page-feed .pf-card {
 main .page-feed.borderless .pf-card,
 main .page-feed.avatar .pf-card {
   background: transparent;
-}
-
-main .page-feed.borderless .pf-card,
-main .page-feed.avatar .pf-card {
   border: unset;
   border-radius: unset;
 }
 
-main .page-feed a {
-  text-decoration: none;
-}
-
 main .page-feed .pf-card-text {
-  padding: 16px;
-  padding-bottom: 20px;
+  padding: 16px 16px 20px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -114,14 +132,48 @@ main .page-feed .pf-card-text > :first-child {
   padding-top: 0;
 }
 
+main .page-feed .pf-card-text > :last-child {
+  padding-bottom: 0;
+}
+
 main .page-feed.borderless .pf-card-text > :first-child,
 main .page-feed.avatar .pf-card-text > :first-child {
   min-height: unset;
   padding-bottom: 8px;
 }
 
-main .page-feed .pf-card-text > :last-child {
-  padding-bottom: 0;
+main .page-feed .pf-card .pf-card-text p,
+main .page-feed .pf-card .pf-card-text h1,
+main .page-feed .pf-card .pf-card-text h2,
+main .page-feed .pf-card .pf-card-text h3,
+main .page-feed .pf-card .pf-card-text h4,
+main .page-feed .pf-card .pf-card-text h5,
+main .page-feed .pf-card .pf-card-text span.detail {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+main .page-feed.pf-overlay .pf-card-text a,
+main .page-feed.pf-overlay .pf-card-text p,
+main .page-feed.pf-overlay .pf-card-text h1,
+main .page-feed.pf-overlay .pf-card-text h2,
+main .page-feed.pf-overlay .pf-card-text h3,
+main .page-feed.pf-overlay .pf-card-text h4,
+main .page-feed.pf-overlay .pf-card-text h5,
+main .page-feed.pf-overlay .pf-card-text span.detail {
+  color: var(--color-white);
+  min-height: unset;
+}
+
+main .page-feed .pf-card .pf-card-text p {
+  margin-bottom: 0;
+  margin-top: 0;
+  color: #747474;
+}
+
+main .page-feed .pf-card .pf-card-text p:not(.detail-m) {
+  font-size: var(--type-body-xs-size);
+  line-height: var(--type-body-xs-lh);
 }
 
 main .page-feed:not(.horizontal):not(.pf-overlay) .pf-card-text > p:not(:last-child) {
@@ -141,11 +193,22 @@ main .page-feed:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-contai
 }
 
 main .page-feed:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container:last-child a {
-  min-width: none;
+  min-width: unset;
 }
 
 main .page-feed:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container:last-child a:only-child {
   margin-left: auto;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container {
+  justify-content: center;
+  border: unset;
+  padding-top: unset;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) {
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
 main .page-feed.borderless:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container:last-child {
@@ -163,17 +226,6 @@ main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button
 main .page-feed .pf-card-text span.detail + * {
   padding-top: 2px;
   min-height: 54px;
-}
-
-main .page-feed .pf-card .pf-card-text p,
-main .page-feed .pf-card .pf-card-text h1,
-main .page-feed .pf-card .pf-card-text h2,
-main .page-feed .pf-card .pf-card-text h3,
-main .page-feed .pf-card .pf-card-text h4,
-main .page-feed .pf-card .pf-card-text h5,
-main .page-feed .pf-card .pf-card-text span.detail {
-  padding-top: 2px;
-  padding-bottom: 2px;
 }
 
 main .page-feed .pf-card .pf-card-text h1,
@@ -197,20 +249,6 @@ main .page-feed.horizontal .pf-card .pf-card-text h5 {
   line-height: var(--type-heading-xs-lh);
   margin-bottom: 0;
   margin-top: 4px;
-}
-
-main .page-feed .pf-card .pf-card-text p {
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-main .page-feed .pf-card .pf-card-text p {
-  color: #747474;
-}
-
-main .page-feed .pf-card .pf-card-text p:not(.detail-m) {
-  font-size: var(--type-body-xs-size);
-  line-height: var(--type-body-xs-lh);
 }
 
 main .page-feed .pf-card-banner {
@@ -240,15 +278,11 @@ main .page-feed .pf-card-banner > div:not(:empty) {
 
 main .page-feed .pf-card-banner .icon {
   position: absolute;
-  top: 28px;
+  top: 132px;
   right: 28px;
   height: 40px;
   width: 40px;
   z-index: 2;
-}
-
-main .page-feed .pf-card-banner .icon {
-  top: 132px;
 }
 
 main .page-feed.col-5-pf-cards .pf-card-banner .icon {
@@ -260,9 +294,9 @@ main .page-feed.col-3-pf-cards .pf-card-banner .icon {
   top: 232px;
 }
 
+main .page-feed.pf-overlay .pf-card-banner .icon,
 main .page-feed.pf-overlay.col-2-pf-cards .pf-card-banner .icon,
-main .page-feed.pf-overlay.col-3-pf-cards .pf-card-banner .icon,
-main .page-feed.pf-overlay .pf-card-banner .icon {
+main .page-feed.pf-overlay.col-3-pf-cards .pf-card-banner .icon {
   top: auto;
   bottom: 28px;
 }
@@ -292,12 +326,46 @@ main .page-feed.col-3-pf-cards .pf-card-picture video {
   height: 300px;
 }
 
+main .page-feed.horizontal .pf-card-picture img,
+main .page-feed.horizontal .pf-card-picture video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110px;
+}
+
+main .page-feed.avatar .pf-card-picture {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+main .page-feed.avatar .pf-card-picture img,
+main .page-feed.avatar .pf-card-picture video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+main .page-feed.horizontal .pf-card-picture img,
+main .page-feed.horizontal .pf-card-picture video,
+main .page-feed.pf-overlay .pf-card-picture img,
+main .page-feed.pf-overlay .pf-card-picture video,
+main .page-feed.horizontal.col-2-pf-cards .pf-card-picture img,
+main .page-feed.horizontal.col-3-pf-cards .pf-card-picture img,
+main .page-feed.horizontal.col-2-pf-cards .pf-card-picture video,
+main .page-feed.horizontal.col-3-pf-cards .pf-card-picture video,
 main .page-feed.pf-overlay.col-2-pf-cards .pf-card-picture img,
 main .page-feed.pf-overlay.col-3-pf-cards .pf-card-picture img,
-main .page-feed.pf-overlay .pf-card-picture img,
 main .page-feed.pf-overlay.col-2-pf-cards .pf-card-picture video,
-main .page-feed.pf-overlay.col-3-pf-cards .pf-card-picture video,
-main .page-feed.pf-overlay .pf-card-picture video {
+main .page-feed.pf-overlay.col-3-pf-cards .pf-card-picture video {
   height: 100%;
 }
 
@@ -332,38 +400,11 @@ main .page-feed.pf-overlay .pf-card-text {
   min-height: 208px;
 }
 
-main .page-feed.pf-overlay .pf-card-text p,
-main .page-feed.pf-overlay .pf-card-text h1,
-main .page-feed.pf-overlay .pf-card-text h2,
-main .page-feed.pf-overlay .pf-card-text h3,
-main .page-feed.pf-overlay .pf-card-text h4,
-main .page-feed.pf-overlay .pf-card-text h5,
-main .page-feed.pf-overlay .pf-card-text span.detail,
-main .page-feed.pf-overlay .pf-card-text a {
-  color: var(--color-white);
-  min-height: unset;
-}
-
 main .page-feed.horizontal .pf-card {
   display: flex;
   width: 100%;
-}
-
-main .page-feed .pf-card > a {
-  color: unset;
-  border-color: unset;
-  background: unset;
-  border-radius: unset;
-  padding: unset;
-  margin: unset;
-  height: 100%;
-  text-align: unset;
-  transition: unset;
-  border: unset;
-  white-space: unset;
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
+  max-width: 375px;
+  min-height: 128px;
 }
 
 main .page-feed.horizontal .pf-card-container-link {
@@ -371,37 +412,13 @@ main .page-feed.horizontal .pf-card-container-link {
   width: 100%;
   height: 100%;
   flex-direction: row;
-}
-
-main .page-feed.horizontal .pf-card {
-  max-width: 375px;
+  transition: filter 0.3s;
 }
 
 main .page-feed.horizontal .pf-card-picture {
   width: 110px;
   min-width: 110px;
   position: relative;
-}
-
-main .page-feed.horizontal.col-2-pf-cards .pf-card-picture img,
-main .page-feed.horizontal.col-3-pf-cards .pf-card-picture img,
-main .page-feed.horizontal .pf-card-picture img,
-main .page-feed.horizontal.col-2-pf-cards .pf-card-picture video,
-main .page-feed.horizontal.col-3-pf-cards .pf-card-picture video,
-main .page-feed.horizontal .pf-card-picture video {
-  height: 100%;
-}
-
-main .page-feed.horizontal .pf-card-picture img,
-main .page-feed.horizontal .pf-card-picture video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 110px;
-}
-
-main .page-feed.horizontal .pf-card {
-  min-height: 128px;
 }
 
 main .page-feed.col-2-pf-cards {
@@ -437,6 +454,77 @@ main .page-feed.horizontal.col-4-pf-cards {
   max-width: 770px;
 }
 
+main .section.has-background .page-feed:first-child {
+  margin-top: 0;
+}
+
+main > div.section:first-of-type > .page-feed:first-child {
+  padding-top: 80px;
+}
+
+main .page-feed:not(.horizontal) .pf-card-container-link .pf-card-picture img,
+main .page-feed:not(.horizontal) .pf-card-container-link .pf-card-picture video {
+  transition: filter 0.3s, transform 0.3s;
+}
+
+main .page-feed.pf-fit:not(.horizontal):not(.pf-overlay) .pf-card-picture img,
+main .page-feed.pf-fit:not(.horizontal):not(.pf-overlay) .pf-card-picture video {
+  height: auto;
+  object-fit: contain;
+}
+
+/* Hover Animations */
+
+main .page-feed:not(.horizontal) .pf-card-container-link .pf-card-picture {
+  overflow: hidden;
+}
+
+main .page-feed:not(.horizontal) .pf-card-container-link:hover .pf-card-picture img,
+main .page-feed:not(.horizontal) .pf-card-container-link:focus .pf-card-picture img,
+main .page-feed:not(.horizontal) .pf-card-container-link:hover .pf-card-picture video,
+main .page-feed:not(.horizontal) .pf-card-container-link:focus .pf-card-picture video {
+  filter: brightness(1.1);
+  transform: scale(1.05);
+}
+
+main .page-feed.horizontal .pf-card-container-link:focus,
+main .page-feed.horizontal .pf-card-container-link:hover {
+  filter: brightness(0.9);
+}
+
+main .section .page-feed + .banner {
+  margin-top: 80px;
+}
+
+main .page-feed.avatar .pf-card-text > p.button-container {
+  text-align: center;
+  justify-content: center;
+}
+
+main .section .page-feed + .content > p.button-container:first-child {
+  margin: 24px auto 0;
+  display: block;
+  width: max-content;
+}
+
+main .page-feed.avatar .pf-card {
+  max-width: 250px;
+  margin-bottom: 40px;
+}
+
+main .page-feed.avatar .pf-card-text {
+  text-align: center;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) img {
+  height: 25px;
+  transition: filter 0.2s;
+}
+
+main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) img:hover {
+  filter: brightness(0.9);
+}
+
 @media screen and (max-width: 999px) {
   main .page-feed.col-2-pf-cards .pf-card-picture img,
   main .page-feed.col-3-pf-cards .pf-card-picture img,
@@ -465,14 +553,6 @@ main .page-feed.horizontal.col-4-pf-cards {
   main .page-feed.col-4-pf-cards {
     grid-template-columns: 1fr 1fr;
   }
-}
-
-main .page-feed + .page-feed {
-  margin-top: 24px;
-}
-
-main > div.section:first-of-type > .page-feed:first-child {
-  padding-top: var(--block-spacing-m);
 }
 
 @media screen and (max-width: 1200px) {
@@ -530,60 +610,6 @@ main > div.section:first-of-type > .page-feed:first-child {
   }
 }
 
-main .page-feed + p,
-main .page-feed + a {
-  margin-top: -20px;
-  padding-top: 0;
-}
-
-main .page-feed.pf-fit:not(.horizontal):not(.pf-overlay) .pf-card-picture img,
-main .page-feed.pf-fit:not(.horizontal):not(.pf-overlay) .pf-card-picture video {
-  height: auto;
-  object-fit: contain;
-}
-
-/* Hover Animations */
-
-main .page-feed:not(.horizontal) .pf-card-container-link .pf-card-picture {
-  overflow: hidden;
-}
-
-main .page-feed:not(.horizontal) .pf-card-container-link .pf-card-picture img,
-main .page-feed:not(.horizontal) .pf-card-container-link .pf-card-picture video {
-  transition: filter 0.3s, transform 0.3s;
-}
-
-main .page-feed:not(.horizontal) .pf-card-container-link:hover .pf-card-picture img,
-main .page-feed:not(.horizontal) .pf-card-container-link:focus .pf-card-picture img,
-main .page-feed:not(.horizontal) .pf-card-container-link:hover .pf-card-picture video,
-main .page-feed:not(.horizontal) .pf-card-container-link:focus .pf-card-picture video {
-  filter: brightness(1.1);
-  transform: scale(1.05);
-}
-
-main .page-feed.horizontal .pf-card-container-link {
-  transition: filter 0.3s;
-}
-
-main .page-feed.horizontal .pf-card-container-link:focus,
-main .page-feed.horizontal .pf-card-container-link:hover {
-  filter: brightness(0.9);
-}
-
-main .section .page-feed + .banner {
-  margin-top: var(--block-spacing-m);
-}
-
-main .section.has-background .page-feed:first-child {
-  margin-top: 0;
-}
-
-main .section .page-feed + .content > p.button-container:first-child {
-  margin: 24px auto 0;
-  display: block;
-  width: max-content;
-}
-
 @media screen and (min-width: 1200px) {
   main .page-feed.borderless.col-2-pf-cards > .pf-card,
   main .page-feed.avatar.col-2-pf-cards > .pf-card {
@@ -594,58 +620,4 @@ main .section .page-feed + .content > p.button-container:first-child {
   main .page-feed.avatar.pf-fit.col-2-pf-cards {
     max-width: 1000px;
   }
-}
-
-main .page-feed.avatar .pf-card-picture {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  padding-bottom: 100%;
-  border-radius: 50%;
-  box-sizing: border-box;
-  margin: 0 auto;
-}
-
-main .page-feed.avatar .pf-card-picture img,
-main .page-feed.avatar .pf-card-picture video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-main .page-feed.avatar .pf-card {
-  max-width: 250px;
-  margin-bottom: 40px;
-}
-
-main .page-feed.avatar .pf-card-text {
-  text-align: center;
-}
-
-main .page-feed.avatar .pf-card-text > p.button-container {
-  text-align: center;
-  justify-content: center;
-}
-
-main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container {
-  justify-content: center;
-  border: unset;
-  padding-top: unset;
-}
-
-main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) {
-  margin-left: 8px;
-  margin-right: 8px;
-}
-
-main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) img {
-  height: 25px;
-  transition: filter 0.2s;
-}
-
-main .page-feed.avatar:not(.horizontal):not(.pf-overlay) .pf-card-text > .button-container > a:not(.button) img:hover {
-  filter: brightness(0.9);
 }
