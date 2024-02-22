@@ -4,7 +4,7 @@ main .image-rows {
   margin-right: auto;
   display: flex;
   flex-direction: column;
-  width: max-content;
+  width: 100%;
 }
 
 main .image-rows > div:not(.image-rows-caption) > div {
